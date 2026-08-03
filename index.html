@@ -2,149 +2,136 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الدردشة الاحترافي</title>
-    <!-- استيراد خط كاييرو العصري -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SECURE TERMINAL CHAT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #090d16;
-            --bg-panel: #111827;
-            --bg-card: #1f2937;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --border: #374151;
-            --danger: #ef4444;
+            --bg-color: #050505;
+            --matrix-green: #00ff41;
+            --matrix-dark: #008f11;
+            --border-glow: 0 0 10px rgba(0, 255, 65, 0.5);
+            --danger: #ff003c;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Share Tech Mono', monospace; /* خط الهاكرز */
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            background-color: var(--bg-color);
+            color: var(--matrix-green);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
         .app-container {
             width: 100%;
-            max-width: 1000px;
-            height: 92vh;
-            background: var(--bg-panel);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border);
-            overflow: hidden;
+            max-width: 1100px;
+            height: 95vh;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--matrix-green);
+            box-shadow: var(--border-glow);
             display: flex;
             position: relative;
         }
 
-        /* الشاشات العامة */
+        /* Terminal Header Log */
+        .system-log {
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            font-size: 12px;
+            color: var(--matrix-dark);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         .screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-panel);
+            background: var(--bg-color);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 30px;
+            padding: 20px;
             z-index: 10;
-            transition: all 0.4s ease;
         }
 
         .screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.98);
-            z-index: -1;
+            display: none !important;
         }
 
-        /* بطاقات الدخول وإكمال الملف */
         .card-box {
-            background: var(--bg-card);
+            background: transparent;
             padding: 40px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--matrix-green);
+            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.2);
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
         h2 {
             margin-bottom: 25px;
-            color: var(--text-main);
-            font-weight: 700;
-            font-size: 24px;
+            font-size: 22px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 10px;
+            background: transparent;
+            color: var(--matrix-green);
+            border: 1px solid var(--matrix-green);
+            padding: 12px 20px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: 600;
             width: 100%;
-            transition: all 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+            transition: all 0.2s;
+            text-transform: uppercase;
         }
 
         .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .google-btn {
-            background: #ffffff;
-            color: #1f2937;
-            font-weight: 700;
-        }
-
-        .google-btn:hover {
-            background: #e5e7eb;
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+            background: var(--matrix-green);
+            color: var(--bg-color);
+            box-shadow: var(--border-glow);
         }
 
         input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px 15px;
             margin-bottom: 15px;
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-main);
+            background: transparent;
+            border: 1px solid var(--matrix-dark);
+            color: var(--matrix-green);
             font-size: 15px;
-            transition: border-color 0.3s;
         }
 
         input:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            border-color: var(--matrix-green);
+            box-shadow: inset 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+        
+        input::placeholder {
+            color: var(--matrix-dark);
         }
 
-        /* تصميم الشات الرئيسي */
+        /* Layout */
         .chat-layout {
             display: flex;
             width: 100%;
@@ -152,264 +139,261 @@
         }
 
         .sidebar {
-            width: 340px;
-            border-left: 1px solid var(--border);
+            width: 320px;
+            border-left: 1px solid var(--matrix-dark);
             display: flex;
             flex-direction: column;
-            background: var(--bg-panel);
+            background: rgba(0, 20, 0, 0.3);
         }
 
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(17, 24, 39, 0.7);
+            padding: 15px;
+            border-bottom: 1px solid var(--matrix-dark);
         }
 
-        .user-profile-info {
+        .profile-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
 
-        .user-profile-info h4 {
-            font-size: 16px;
-            color: var(--text-main);
-        }
+        .search-box input { margin-bottom: 0; }
 
-        .user-profile-info span {
-            font-size: 13px;
-            color: var(--text-muted);
-            background: var(--bg-card);
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .search-box input {
-            margin-bottom: 0;
-            font-size: 14px;
-            padding: 10px 14px;
+        .section-title {
+            padding: 10px 15px;
+            font-size: 12px;
+            color: var(--matrix-dark);
+            border-bottom: 1px dashed var(--matrix-dark);
+            background: black;
         }
 
         .users-list {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
         }
 
         .user-item {
-            padding: 12px 15px;
-            border-radius: 10px;
+            padding: 15px;
+            border-bottom: 1px solid #002200;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 6px;
-            background: transparent;
+            transition: 0.2s;
         }
 
         .user-item:hover, .user-item.active {
-            background: var(--bg-card);
-            border-color: var(--border);
+            background: #001a00;
+            border-left: 3px solid var(--matrix-green);
         }
 
-        .user-item h4 {
-            font-size: 15px;
-            color: var(--text-main);
-            margin-bottom: 2px;
-        }
-
-        .user-item span {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        .user-item h4 { font-size: 15px; margin-bottom: 5px; }
+        .user-item span { font-size: 12px; color: var(--matrix-dark); }
 
         .chat-area {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--bg-main);
+            background: #000;
         }
 
         .chat-header {
-            padding: 18px 25px;
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--text-main);
+            padding: 15px;
+            border-bottom: 1px solid var(--matrix-dark);
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: none; /* يظهر بس ع الموبايل */
+            background: transparent;
+            color: var(--matrix-green);
+            border: 1px solid var(--matrix-green);
+            padding: 5px 10px;
+            cursor: pointer;
         }
 
         .messages-box {
             flex: 1;
-            padding: 25px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
 
         .message {
-            max-width: 65%;
-            padding: 12px 16px;
-            border-radius: 14px;
-            font-size: 14px;
-            line-height: 1.5;
+            max-width: 75%;
+            padding: 10px 15px;
+            font-size: 15px;
+            line-height: 1.4;
             word-break: break-word;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .msg-time {
+            font-size: 10px;
+            display: block;
+            margin-top: 5px;
+            opacity: 0.7;
         }
 
         .message.sent {
-            background: var(--accent);
-            color: white;
-            align-self: flex-start; /* في الـ RTL تظهر يميناً */
-            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            border-right: 2px solid var(--matrix-green);
+            background: #001100;
         }
 
         .message.received {
-            background: var(--bg-card);
-            color: var(--text-main);
-            align-self: flex-end; /* في الـ RTL تظهر يساراً */
-            border-bottom-right-radius: 4px;
-            border: 1px solid var(--border);
+            align-self: flex-end;
+            border-left: 2px solid var(--matrix-dark);
+            background: #000500;
+            color: #ccc;
         }
 
         .chat-input-box {
-            padding: 20px;
-            background: var(--bg-panel);
-            border-top: 1px solid var(--border);
+            padding: 15px;
+            border-top: 1px solid var(--matrix-dark);
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .chat-input-box input {
-            margin-bottom: 0;
-        }
+        .chat-input-box input { margin-bottom: 0; }
+        .chat-input-box .btn { width: 100px; }
 
-        .chat-input-box .btn {
-            width: 120px;
-        }
-
-        .error-text {
-            color: var(--danger);
-            font-size: 13px;
-            margin-bottom: 15px;
-            background: rgba(239, 68, 68, 0.1);
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .logout-btn {
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid var(--danger);
-            padding: 6px 12px;
-            border-radius: 6px;
+        .small-btn {
+            padding: 4px 8px;
             font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* شريط التمرير المخصص */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
+            border: 1px solid var(--matrix-dark);
             background: transparent;
+            color: var(--matrix-dark);
+            cursor: pointer;
         }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
+        .small-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+        /* سكرول بار الهاكرز */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--matrix-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--matrix-green); }
+
+        /* ================================== */
+        /* التجاوب مع الموبايل (المهمة اللي طلبتها) */
+        /* ================================== */
+        @media (max-width: 768px) {
+            .app-container { height: 100vh; border: none; box-shadow: none; }
+            .chat-layout { position: relative; overflow: hidden; }
+            
+            .sidebar {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: 5;
+                transition: transform 0.3s ease;
+            }
+            
+            .chat-area {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: 4; /* تحت القائمة، وتظهر لما القائمة تختفي */
+            }
+
+            /* لما نختار شخص، نخفي القائمة بإزاحتها لليمين */
+            .sidebar.hide-mobile {
+                transform: translateX(100%);
+            }
+            
+            /* إظهار زر الرجوع في الموبايل */
+            .back-btn { display: block; margin-left: 10px; }
         }
     </style>
 </head>
 <body>
 
+    <div class="system-log" id="sysLog">SYSTEM_READY > _</div>
+
     <div class="app-container">
+        
         <!-- 1. شاشة تسجيل الدخول -->
         <div id="loginScreen" class="screen">
             <div class="card-box">
-                <h2>تسجيل الدخول</h2>
-                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">تواصل بحرية وبأمان تام عبر الأرقام التعريفية</p>
-                <button class="btn google-btn" onclick="loginWithGoogle()">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.2v3.15C3.21 21.34 7.27 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.5-.38-2.24s.13-1.52.38-2.24V6.6H1.2C.43 8.14 0 9.99 0 12s.43 3.86 1.2 5.4l4.07-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.27 0 3.21 2.66 1.2 6.6l4.07 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                    تسجيل الدخول بواسطة جوجل
-                </button>
+                <h2>[ SECURE LOGIN ]</h2>
+                <button class="btn" onclick="loginWithGoogle()">> INITIALIZE GOOGLE AUTH</button>
             </div>
         </div>
 
-        <!-- 2. شاشة إكمال الملف الشخصي -->
+        <!-- 2. شاشة إكمال الملف -->
         <div id="profileScreen" class="screen hidden">
             <div class="card-box">
-                <h2>إعداد الملف الشخصي</h2>
-                <div id="profileError" class="error-text" style="display: none;"></div>
-                <input type="text" id="fullName" placeholder="الاسم الكامل">
-                <input type="text" id="username" placeholder="اسم المستخدم (Username)">
-                <input type="text" id="uniqueId" placeholder="الرقم التعريفي (4 أرقام فقط)" maxlength="4">
-                <button class="btn" onclick="saveProfile()">حفظ والبدء فوراً</button>
+                <h2>[ CONFIGURE ID ]</h2>
+                <div id="profileError" style="color: var(--danger); margin-bottom:10px; font-size: 13px;"></div>
+                <input type="text" id="fullName" placeholder="> ENTER_FULL_NAME">
+                <input type="text" id="username" placeholder="> ENTER_ALIAS (Username)">
+                <input type="text" id="uniqueId" placeholder="> SET_4_DIGIT_PIN" maxlength="4">
+                <button class="btn" onclick="saveProfile()">> EXECUTE</button>
             </div>
         </div>
 
-        <!-- 3. الشاشة الرئيسية للدردشة -->
+        <!-- 3. الشاشة الرئيسية -->
         <div id="mainScreen" class="screen hidden" style="padding: 0;">
             <div class="chat-layout">
-                <!-- الشريط الجانبي والبحث -->
-                <div class="sidebar">
+                
+                <!-- الشريط الجانبي (المحادثات المحفوظة والبحث) -->
+                <div class="sidebar" id="sidebarArea">
                     <div class="sidebar-header">
-                        <div class="user-profile-info">
-                            <div>
-                                <h4 id="myNameDisplay">جاري التحميل...</h4>
-                                <span id="myIdDisplay">#0000</span>
-                            </div>
-                            <button class="logout-btn" onclick="logout()">خروج</button>
+                        <div class="profile-row">
+                            <div style="font-size: 14px;">USER: <span id="myNameDisplay" style="color:white">...</span> <br>ID: <span id="myIdDisplay" style="color:var(--matrix-dark)">...</span></div>
+                            <button class="small-btn" onclick="logout()">LOGOUT</button>
                         </div>
                         <div class="search-box">
-                            <input type="text" id="searchIdInput" placeholder="بحث بالرقم التعريفي (4 أرقام)..." oninput="searchUser()">
+                            <input type="text" id="searchIdInput" placeholder="> SEARCH_TARGET_ID (4 DIGITS)" oninput="searchUser()">
                         </div>
                     </div>
-                    <div class="users-list" id="usersListContainer">
-                        <div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">
-                            ابحث عن شخص برقمة التعريفي للبدء
+                    
+                    <div id="searchResultsArea" style="display: none;">
+                        <div class="section-title">TARGET_LOCATED:</div>
+                        <div class="users-list" id="searchContainer"></div>
+                    </div>
+
+                    <div id="recentChatsArea">
+                        <div class="section-title">ENCRYPTED_CONNECTIONS (محفوظة):</div>
+                        <div class="users-list" id="recentChatsContainer">
+                            <!-- المحادثات المحفوظة تظهر هنا -->
                         </div>
                     </div>
                 </div>
 
-                <!-- منطقة المحادثة النصية البحتة -->
+                <!-- منطقة الشات -->
                 <div class="chat-area">
-                    <div class="chat-header" id="activeChatHeader">
-                        <span>💬 اختر شخصاً من القائمة الجانبية لبدء المحادثة</span>
-                    </div>
-                    <div class="messages-box" id="messagesBox">
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-muted); font-size: 14px;">
-                            لا توجد رسائل محددة حالياً
+                    <div class="chat-header">
+                        <div style="display:flex; align-items:center;">
+                            <button class="back-btn" onclick="closeMobileChat()">&#9664; BACK</button>
+                            <span id="activeChatHeader">AWAITING_TARGET_SELECTION...</span>
                         </div>
+                        <button class="small-btn" onclick="clearTerminal()" id="clearBtn" style="display:none;">CLEAR</button>
                     </div>
+                    
+                    <div class="messages-box" id="messagesBox">
+                        <div style="text-align:center; opacity:0.5; margin-top:50px;">SELECT A CONNECTION TO INITIATE PROTOCOL</div>
+                    </div>
+                    
                     <div class="chat-input-box" id="chatInputArea" style="display: none;">
-                        <input type="text" id="messageInput" placeholder="اكتب رسالة نصية هنا..." onkeypress="checkEnter(event)">
-                        <button class="btn" onclick="sendMessage()">إرسال</button>
+                        <input type="text" id="messageInput" placeholder="> TYPE_COMMAND..." onkeypress="checkEnter(event)">
+                        <button class="btn" onclick="sendMessage()">> SEND</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- كود المنطق والربط مع فايربيس -->
+    <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // إعدادات مشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyAcqJlqxeCxehWuBlRsrIpL77ClTOYvgXo",
             authDomain: "program-73193.firebaseapp.com",
@@ -428,40 +412,42 @@
         let userData = null;
         let activeChatUser = null;
         let unsubscribeMessages = null;
+        let userUnsubscribe = null;
+
+        function updateSysLog(msg) {
+            document.getElementById('sysLog').innerText = `SYSTEM_LOG > ${msg} _`;
+        }
 
         window.loginWithGoogle = async function() {
+            updateSysLog("INITIATING HANDSHAKE...");
             const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                console.error("خطأ في تسجيل الدخول", error);
-            }
+            try { await signInWithPopup(auth, provider); } 
+            catch (error) { updateSysLog("HANDSHAKE_FAILED"); }
         };
 
         window.logout = async function() {
             await signOut(auth);
+            window.location.reload();
         };
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                const userDocRef = doc(db, "users", user.uid);
-                const userDoc = await getDoc(userDocRef);
-
-                if (userDoc.exists()) {
-                    userData = userDoc.data();
-                    showMainScreen();
-                } else {
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    document.getElementById('profileScreen').classList.remove('hidden');
-                }
+                updateSysLog("AUTHENTICATED. FETCHING_DATA...");
+                
+                // جلب بيانات المستخدم وعمل مستمع (Listener) للمحادثات المحفوظة
+                userUnsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                        showMainScreen();
+                        renderRecentChats(); // ميزة الحفظ الدائم
+                    } else {
+                        document.getElementById('loginScreen').classList.add('hidden');
+                        document.getElementById('profileScreen').classList.remove('hidden');
+                    }
+                });
             } else {
-                currentUser = null;
-                userData = null;
-                activeChatUser = null;
-                if (unsubscribeMessages) unsubscribeMessages();
                 document.getElementById('loginScreen').classList.remove('hidden');
-                document.getElementById('profileScreen').classList.add('hidden');
                 document.getElementById('mainScreen').classList.add('hidden');
             }
         });
@@ -472,70 +458,79 @@
             const uniqueId = document.getElementById('uniqueId').value.trim();
             const errorDiv = document.getElementById('profileError');
 
-            if (!fullName || !username || !uniqueId) {
-                errorDiv.innerText = "الرجاء تعبئة جميع الحقول المطلوبة";
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            if (uniqueId.length !== 4 || isNaN(uniqueId)) {
-                errorDiv.innerText = "الرقم التعريفي يجب أن يكون مكوناً من 4 أرقام فقط";
-                errorDiv.style.display = 'block';
-                return;
-            }
+            if (!fullName || !username || !uniqueId) { errorDiv.innerText = "MISSING_PARAMETERS"; return; }
+            if (uniqueId.length !== 4 || isNaN(uniqueId)) { errorDiv.innerText = "ID_MUST_BE_4_NUMBERS"; return; }
 
             const q = query(collection(db, "users"), where("uniqueId", "==", uniqueId));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                errorDiv.innerText = "هذا الرقم التعريفي مستخدم مسبقاً، اختر رقماً آخر غير مستخدم";
-                errorDiv.style.display = 'block';
-                return;
-            }
+            const snap = await getDocs(q);
+            if (!snap.empty) { errorDiv.innerText = "ID_ALREADY_IN_USE. ABORT."; return; }
 
-            userData = {
-                uid: currentUser.uid,
-                fullName,
-                username,
-                uniqueId
-            };
-
+            userData = { uid: currentUser.uid, fullName, username, uniqueId, recentChats: [] };
             await setDoc(doc(db, "users", currentUser.uid), userData);
             showMainScreen();
         };
 
         function showMainScreen() {
-            document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('profileScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
             document.getElementById('myNameDisplay').innerText = userData.fullName;
             document.getElementById('myIdDisplay').innerText = `#${userData.uniqueId}`;
+            updateSysLog("SECURE_CHANNEL_OPEN");
+        }
+
+        // --- ميزة المحادثات المحفوظة ---
+        function renderRecentChats() {
+            const container = document.getElementById('recentChatsContainer');
+            if (!userData.recentChats || userData.recentChats.length === 0) {
+                container.innerHTML = `<div style="padding:15px; font-size:12px; color:var(--matrix-dark)">NO_DATA_FOUND.</div>`;
+                return;
+            }
+            container.innerHTML = '';
+            // عرض المحادثات بالعكس (الأحدث فوق)
+            [...userData.recentChats].reverse().forEach(user => {
+                container.innerHTML += `
+                    <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
+                        <h4>> ${user.fullName}</h4>
+                        <span>ID: #${user.uniqueId} | @${user.username}</span>
+                    </div>
+                `;
+            });
         }
 
         window.searchUser = async function() {
             const queryText = document.getElementById('searchIdInput').value.trim();
-            const listContainer = document.getElementById('usersListContainer');
-            listContainer.innerHTML = '';
+            const searchArea = document.getElementById('searchResultsArea');
+            const recentArea = document.getElementById('recentChatsArea');
+            const container = document.getElementById('searchContainer');
 
             if (queryText.length === 0) {
-                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">ابحث عن شخص برقمة التعريفي للبدء</div>`;
+                searchArea.style.display = 'none';
+                recentArea.style.display = 'block';
                 return;
             }
+
+            searchArea.style.display = 'block';
+            recentArea.style.display = 'none';
+            container.innerHTML = '';
 
             const q = query(collection(db, "users"), where("uniqueId", "==", queryText));
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
-                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 20px; font-size: 13px;">لا يوجد مستخدم بهذا الرقم</div>`;
+                container.innerHTML = `<div style="padding:15px; font-size:12px; color:var(--danger)">TARGET_NOT_FOUND</div>`;
                 return;
             }
 
             querySnapshot.forEach((docSnap) => {
                 const user = docSnap.data();
-                if (user.uid !== currentUser.uid) {
-                    listContainer.innerHTML += `
+                if (user.uid === currentUser.uid) {
+                    container.innerHTML = `<div style="padding:15px; font-size:12px; color:var(--danger)">CANNOT_CONNECT_TO_SELF</div>`;
+                } else {
+                    container.innerHTML += `
                         <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
-                            <h4>${user.fullName}</h4>
-                            <span>#${user.uniqueId} &bull; @${user.username}</span>
+                            <h4>> ${user.fullName}</h4>
+                            <span>ID: #${user.uniqueId}</span>
                         </div>
                     `;
                 }
@@ -544,9 +539,21 @@
 
         window.selectUser = function(user) {
             activeChatUser = user;
-            document.getElementById('activeChatHeader').innerHTML = `المحادثة مع: <span style="color: var(--accent); margin-right: 5px;">${user.fullName}</span> <span style="font-size: 12px; color: var(--text-muted); margin-right: 10px;">(#${user.uniqueId})</span>`;
+            document.getElementById('activeChatHeader').innerHTML = `TARGET: <span style="color:#fff">${user.fullName}</span> [#${user.uniqueId}]`;
             document.getElementById('chatInputArea').style.display = 'flex';
+            document.getElementById('clearBtn').style.display = 'block';
+            
+            // تفعيل الموبايل (إخفاء القائمة وإظهار الشات)
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebarArea').classList.add('hide-mobile');
+            }
+
             loadMessages();
+        };
+
+        // زر الرجوع في الموبايل
+        window.closeMobileChat = function() {
+            document.getElementById('sidebarArea').classList.remove('hide-mobile');
         };
 
         window.sendMessage = async function() {
@@ -555,21 +562,45 @@
             if (!text || !activeChatUser) return;
 
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
-
-            input.value = ''; // تفريغ الحقل فوراً لسرعة الاستجابة
+            input.value = ''; 
 
             await addDoc(collection(db, "chats", chatId, "messages"), {
                 text: text,
                 senderId: currentUser.uid,
                 timestamp: Date.now()
             });
+
+            // تحديث قائمة المحادثات (حفظ الشخص عندك وعند الطرف الثاني)
+            const chatObjForMe = { uid: activeChatUser.uid, fullName: activeChatUser.fullName, uniqueId: activeChatUser.uniqueId, username: activeChatUser.username };
+            const chatObjForThem = { uid: currentUser.uid, fullName: userData.fullName, uniqueId: userData.uniqueId, username: userData.username };
+            
+            // إزالة الشخص لو كان موجود أصلاً وإضافته من جديد ليكون بالأعلى (محاكاة)
+            // بس للتبسيط نستخدم arrayUnion
+            await updateDoc(doc(db, "users", currentUser.uid), {
+                recentChats: arrayUnion(chatObjForMe)
+            });
+            await updateDoc(doc(db, "users", activeChatUser.uid), {
+                recentChats: arrayUnion(chatObjForThem)
+            });
         };
 
-        window.checkEnter = function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+        window.checkEnter = function(e) { if (e.key === 'Enter') sendMessage(); };
+
+        // زر مسح التيرمنال (ينظف الشاشة فقط)
+        window.clearTerminal = function() {
+            document.getElementById('messagesBox').innerHTML = `<div style="text-align:center; opacity:0.5; margin-top:50px;">TERMINAL_CLEARED...</div>`;
         };
+
+        function formatTime(ms) {
+            const d = new Date(ms);
+            let h = d.getHours();
+            let m = d.getMinutes();
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12; 
+            m = m < 10 ? '0'+m : m;
+            return `${h}:${m} ${ampm}`;
+        }
 
         function loadMessages() {
             if (!activeChatUser) return;
@@ -583,7 +614,7 @@
             unsubscribeMessages = onSnapshot(q, (snapshot) => {
                 messagesBox.innerHTML = '';
                 if (snapshot.empty) {
-                    messagesBox.innerHTML = `<div style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-muted); font-size: 14px;">لا توجد رسائل سابقة. ابدأ المحادثة الآن!</div>`;
+                    messagesBox.innerHTML = `<div style="text-align:center; opacity:0.5; margin-top:50px;">NO_PREVIOUS_LOGS...</div>`;
                     return;
                 }
                 snapshot.forEach((doc) => {
@@ -592,6 +623,7 @@
                     messagesBox.innerHTML += `
                         <div class="message ${isMe ? 'sent' : 'received'}">
                             ${msg.text}
+                            <span class="msg-time">${formatTime(msg.timestamp)}</span>
                         </div>
                     `;
                 });
