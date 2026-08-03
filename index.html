@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دردشة الأرقام التعريفية</title>
-    <!-- استيراد خطوط وتصميم أنيق -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>تطبيق الدردشة الاحترافي</title>
+    <!-- استيراد خط كاييرو العصري -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-main: #090d16;
+            --bg-panel: #111827;
+            --bg-card: #1f2937;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --danger: #ef4444;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,102 +27,124 @@
         }
 
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
-        .container {
+        .app-container {
             width: 100%;
-            max-width: 900px;
-            height: 90vh;
-            background: #1e293b;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            height: 92vh;
+            background: var(--bg-panel);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
             overflow: hidden;
             display: flex;
             position: relative;
         }
 
-        /* شاشات التطبيق */
+        /* الشاشات العامة */
         .screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #1e293b;
+            background: var(--bg-panel);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
             z-index: 10;
-            transition: opacity 0.3s ease;
+            transition: all 0.4s ease;
         }
 
         .screen.hidden {
             opacity: 0;
             pointer-events: none;
+            transform: scale(0.98);
             z-index: -1;
         }
 
-        /* أزرار وتصاميم النماذج */
+        /* بطاقات الدخول وإكمال الملف */
+        .card-box {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
         h2 {
-            margin-bottom: 20px;
-            color: #38bdf8;
+            margin-bottom: 25px;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 24px;
         }
 
         .btn {
-            background: #3b82f6;
+            background: var(--accent);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background 0.2s;
+            width: 100%;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn:hover {
-            background: #2563eb;
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
         }
 
         .google-btn {
             background: #ffffff;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: #1f2937;
+            font-weight: 700;
         }
 
         .google-btn:hover {
-            background: #f1f5f9;
+            background: #e5e7eb;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
         }
 
         input {
             width: 100%;
-            max-width: 350px;
-            padding: 12px 15px;
+            padding: 14px 18px;
             margin-bottom: 15px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            color: #fff;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-main);
             font-size: 15px;
+            transition: border-color 0.3s;
         }
 
         input:focus {
             outline: none;
-            border-color: #38bdf8;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
-        /* تخطيط الشات الرئيسي */
+        /* تصميم الشات الرئيسي */
         .chat-layout {
             display: flex;
             width: 100%;
@@ -118,133 +152,213 @@
         }
 
         .sidebar {
-            width: 35%;
-            border-left: 1px solid #334155;
+            width: 340px;
+            border-left: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            background: #1e293b;
+            background: var(--bg-panel);
         }
 
         .sidebar-header {
-            padding: 15px;
-            border-bottom: 1px solid #334155;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(17, 24, 39, 0.7);
+        }
+
+        .user-profile-info {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-profile-info h4 {
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .user-profile-info span {
+            font-size: 13px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
         }
 
         .search-box input {
             margin-bottom: 0;
             font-size: 14px;
+            padding: 10px 14px;
         }
 
         .users-list {
             flex: 1;
             overflow-y: auto;
+            padding: 10px;
         }
 
         .user-item {
-            padding: 15px;
-            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 12px 15px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            margin-bottom: 6px;
+            background: transparent;
         }
 
         .user-item:hover, .user-item.active {
-            background: #334155;
+            background: var(--bg-card);
+            border-color: var(--border);
         }
 
         .user-item h4 {
             font-size: 15px;
-            color: #f8fafc;
+            color: var(--text-main);
+            margin-bottom: 2px;
         }
 
         .user-item span {
             font-size: 12px;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
 
         .chat-area {
-            flex: 65%;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            background: #0f172a;
+            background: var(--bg-main);
         }
 
         .chat-header {
-            padding: 15px;
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
+            padding: 18px 25px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
             font-weight: 600;
+            font-size: 16px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .messages-box {
             flex: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .message {
-            max-width: 60%;
-            padding: 10px 14px;
-            border-radius: 10px;
+            max-width: 65%;
+            padding: 12px 16px;
+            border-radius: 14px;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
+            word-break: break-word;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .message.sent {
-            background: #3b82f6;
+            background: var(--accent);
             color: white;
             align-self: flex-start; /* في الـ RTL تظهر يميناً */
+            border-bottom-left-radius: 4px;
         }
 
         .message.received {
-            background: #334155;
-            color: #f8fafc;
+            background: var(--bg-card);
+            color: var(--text-main);
             align-self: flex-end; /* في الـ RTL تظهر يساراً */
+            border-bottom-right-radius: 4px;
+            border: 1px solid var(--border);
         }
 
         .chat-input-box {
-            padding: 15px;
-            background: #1e293b;
+            padding: 20px;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .chat-input-box input {
             margin-bottom: 0;
         }
 
+        .chat-input-box .btn {
+            width: 120px;
+        }
+
         .error-text {
-            color: #f87171;
+            color: var(--danger);
             font-size: 13px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* شريط التمرير المخصص */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="app-container">
         <!-- 1. شاشة تسجيل الدخول -->
         <div id="loginScreen" class="screen">
-            <h2>تسجيل الدخول</h2>
-            <button class="btn google-btn" onclick="loginWithGoogle()">
-                <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.2v3.15C3.21 21.34 7.27 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.5-.38-2.24s.13-1.52.38-2.24V6.6H1.2C.43 8.14 0 9.99 0 12s.43 3.86 1.2 5.4l4.07-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.27 0 3.21 2.66 1.2 6.6l4.07 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                تسجيل الدخول بواسطة جوجل
-            </button>
+            <div class="card-box">
+                <h2>تسجيل الدخول</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">تواصل بحرية وبأمان تام عبر الأرقام التعريفية</p>
+                <button class="btn google-btn" onclick="loginWithGoogle()">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.2v3.15C3.21 21.34 7.27 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.5-.38-2.24s.13-1.52.38-2.24V6.6H1.2C.43 8.14 0 9.99 0 12s.43 3.86 1.2 5.4l4.07-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.27 0 3.21 2.66 1.2 6.6l4.07 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    تسجيل الدخول بواسطة جوجل
+                </button>
+            </div>
         </div>
 
-        <!-- 2. شاشة إكمال الملف الشخصي (تظهر لأول مرة) -->
+        <!-- 2. شاشة إكمال الملف الشخصي -->
         <div id="profileScreen" class="screen hidden">
-            <h2>أكمل ملفك الشخصي</h2>
-            <div id="profileError" class="error-text"></div>
-            <input type="text" id="fullName" placeholder="الاسم الكامل">
-            <input type="text" id="username" placeholder="اسم المستخدم (Username)">
-            <input type="text" id="uniqueId" placeholder="الرقم التعريفي (4 أرقام فقط)" maxlength="4">
-            <button class="btn" onclick="saveProfile()">حفظ والبدء</button>
+            <div class="card-box">
+                <h2>إعداد الملف الشخصي</h2>
+                <div id="profileError" class="error-text" style="display: none;"></div>
+                <input type="text" id="fullName" placeholder="الاسم الكامل">
+                <input type="text" id="username" placeholder="اسم المستخدم (Username)">
+                <input type="text" id="uniqueId" placeholder="الرقم التعريفي (4 أرقام فقط)" maxlength="4">
+                <button class="btn" onclick="saveProfile()">حفظ والبدء فوراً</button>
+            </div>
         </div>
 
         <!-- 3. الشاشة الرئيسية للدردشة -->
@@ -253,24 +367,36 @@
                 <!-- الشريط الجانبي والبحث -->
                 <div class="sidebar">
                     <div class="sidebar-header">
-                        <h4 id="myProfileDisplay" style="color: #38bdf8;">حسابي</h4>
+                        <div class="user-profile-info">
+                            <div>
+                                <h4 id="myNameDisplay">جاري التحميل...</h4>
+                                <span id="myIdDisplay">#0000</span>
+                            </div>
+                            <button class="logout-btn" onclick="logout()">خروج</button>
+                        </div>
                         <div class="search-box">
                             <input type="text" id="searchIdInput" placeholder="بحث بالرقم التعريفي (4 أرقام)..." oninput="searchUser()">
                         </div>
                     </div>
                     <div class="users-list" id="usersListContainer">
-                        <!-- نتائج البحث أو جهات الاتصال تظهر هنا -->
+                        <div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">
+                            ابحث عن شخص برقمة التعريفي للبدء
+                        </div>
                     </div>
                 </div>
 
                 <!-- منطقة المحادثة النصية البحتة -->
                 <div class="chat-area">
-                    <div class="chat-header" id="activeChatHeader">اختر شخصاً للبدء بالمراسلة</div>
+                    <div class="chat-header" id="activeChatHeader">
+                        <span>💬 اختر شخصاً من القائمة الجانبية لبدء المحادثة</span>
+                    </div>
                     <div class="messages-box" id="messagesBox">
-                        <!-- الرسائل تظهر هنا -->
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-muted); font-size: 14px;">
+                            لا توجد رسائل محددة حالياً
+                        </div>
                     </div>
                     <div class="chat-input-box" id="chatInputArea" style="display: none;">
-                        <input type="text" id="messageInput" placeholder="اكتب رسالة نصية...">
+                        <input type="text" id="messageInput" placeholder="اكتب رسالة نصية هنا..." onkeypress="checkEnter(event)">
                         <button class="btn" onclick="sendMessage()">إرسال</button>
                     </div>
                 </div>
@@ -281,10 +407,9 @@
     <!-- كود المنطق والربط مع فايربيس -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات مشروعك الفعلي على فايربيس
         const firebaseConfig = {
             apiKey: "AIzaSyAcqJlqxeCxehWuBlRsrIpL77ClTOYvgXo",
             authDomain: "program-73193.firebaseapp.com",
@@ -302,6 +427,7 @@
         let currentUser = null;
         let userData = null;
         let activeChatUser = null;
+        let unsubscribeMessages = null;
 
         window.loginWithGoogle = async function() {
             const provider = new GoogleAuthProvider();
@@ -310,6 +436,10 @@
             } catch (error) {
                 console.error("خطأ في تسجيل الدخول", error);
             }
+        };
+
+        window.logout = async function() {
+            await signOut(auth);
         };
 
         onAuthStateChanged(auth, async (user) => {
@@ -326,6 +456,10 @@
                     document.getElementById('profileScreen').classList.remove('hidden');
                 }
             } else {
+                currentUser = null;
+                userData = null;
+                activeChatUser = null;
+                if (unsubscribeMessages) unsubscribeMessages();
                 document.getElementById('loginScreen').classList.remove('hidden');
                 document.getElementById('profileScreen').classList.add('hidden');
                 document.getElementById('mainScreen').classList.add('hidden');
@@ -339,19 +473,22 @@
             const errorDiv = document.getElementById('profileError');
 
             if (!fullName || !username || !uniqueId) {
-                errorDiv.innerText = "الرجاء تعبئة جميع الحقول";
+                errorDiv.innerText = "الرجاء تعبئة جميع الحقول المطلوبة";
+                errorDiv.style.display = 'block';
                 return;
             }
 
             if (uniqueId.length !== 4 || isNaN(uniqueId)) {
-                errorDiv.innerText = "الرقم التعريفي يجب أن يكون 4 أرقام فقط";
+                errorDiv.innerText = "الرقم التعريفي يجب أن يكون مكوناً من 4 أرقام فقط";
+                errorDiv.style.display = 'block';
                 return;
             }
 
             const q = query(collection(db, "users"), where("uniqueId", "==", uniqueId));
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
-                errorDiv.innerText = "هذا الرقم التعريفي مستخدم مسبقاً، اختر رقماً آخر";
+                errorDiv.innerText = "هذا الرقم التعريفي مستخدم مسبقاً، اختر رقماً آخر غير مستخدم";
+                errorDiv.style.display = 'block';
                 return;
             }
 
@@ -370,7 +507,8 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('profileScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
-            document.getElementById('myProfileDisplay').innerText = `${userData.fullName} (#${userData.uniqueId})`;
+            document.getElementById('myNameDisplay').innerText = userData.fullName;
+            document.getElementById('myIdDisplay').innerText = `#${userData.uniqueId}`;
         }
 
         window.searchUser = async function() {
@@ -378,10 +516,18 @@
             const listContainer = document.getElementById('usersListContainer');
             listContainer.innerHTML = '';
 
-            if (queryText.length === 0) return;
+            if (queryText.length === 0) {
+                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">ابحث عن شخص برقمة التعريفي للبدء</div>`;
+                return;
+            }
 
             const q = query(collection(db, "users"), where("uniqueId", "==", queryText));
             const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 20px; font-size: 13px;">لا يوجد مستخدم بهذا الرقم</div>`;
+                return;
+            }
 
             querySnapshot.forEach((docSnap) => {
                 const user = docSnap.data();
@@ -389,7 +535,7 @@
                     listContainer.innerHTML += `
                         <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
                             <h4>${user.fullName}</h4>
-                            <span>الرقم: #${user.uniqueId} | @${user.username}</span>
+                            <span>#${user.uniqueId} &bull; @${user.username}</span>
                         </div>
                     `;
                 }
@@ -398,7 +544,7 @@
 
         window.selectUser = function(user) {
             activeChatUser = user;
-            document.getElementById('activeChatHeader').innerText = `المحادثة مع: ${user.fullName} (#${user.uniqueId})`;
+            document.getElementById('activeChatHeader').innerHTML = `المحادثة مع: <span style="color: var(--accent); margin-right: 5px;">${user.fullName}</span> <span style="font-size: 12px; color: var(--text-muted); margin-right: 10px;">(#${user.uniqueId})</span>`;
             document.getElementById('chatInputArea').style.display = 'flex';
             loadMessages();
         };
@@ -410,13 +556,19 @@
 
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
 
+            input.value = ''; // تفريغ الحقل فوراً لسرعة الاستجابة
+
             await addDoc(collection(db, "chats", chatId, "messages"), {
                 text: text,
                 senderId: currentUser.uid,
                 timestamp: Date.now()
             });
+        };
 
-            input.value = '';
+        window.checkEnter = function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         };
 
         function loadMessages() {
@@ -424,10 +576,16 @@
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
             const messagesBox = document.getElementById('messagesBox');
 
+            if (unsubscribeMessages) unsubscribeMessages();
+
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
             
-            onSnapshot(q, (snapshot) => {
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
                 messagesBox.innerHTML = '';
+                if (snapshot.empty) {
+                    messagesBox.innerHTML = `<div style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-muted); font-size: 14px;">لا توجد رسائل سابقة. ابدأ المحادثة الآن!</div>`;
+                    return;
+                }
                 snapshot.forEach((doc) => {
                     const msg = doc.data();
                     const isMe = msg.senderId === currentUser.uid;
