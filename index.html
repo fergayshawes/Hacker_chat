@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SECURE TERMINAL CHAT v2.0</title>
+    <title>SECURE MOBILE TERMINAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #030712;
+            --bg-color: #000000;
             --matrix-green: #00ff41;
-            --matrix-dark: #00751a;
-            --border-glow: 0 0 12px rgba(0, 255, 65, 0.3);
+            --matrix-dark: #006611;
             --danger: #ff003c;
+            --border-glow: 0 0 8px rgba(0, 255, 65, 0.4);
         }
 
         * {
@@ -25,30 +25,27 @@
         body, html {
             background-color: var(--bg-color);
             color: var(--matrix-green);
-            height: 100%;
-            width: 100%;
+            height: 100vh;
+            width: 100vw;
             overflow: hidden;
-            position: fixed; /* منع الـ Bounce المزعج بالموبايل */
+            position: fixed;
         }
 
         .app-container {
-            width: 100vw;
-            height: 100vh;
-            background: #000;
+            width: 100%;
+            height: 100%;
             display: flex;
             position: relative;
-            overflow: hidden;
+            background: #000;
         }
 
-        /* تيرمنال سبيس علوي */
-        .system-log {
+        .sys-bar {
             position: absolute;
             top: 2px;
-            left: 10px;
-            font-size: 10px;
+            right: 10px;
+            font-size: 9px;
             color: var(--matrix-dark);
             z-index: 100;
-            pointer-events: none;
         }
 
         .screen {
@@ -62,7 +59,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 20px;
             z-index: 10;
         }
 
@@ -70,38 +67,17 @@
             display: none !important;
         }
 
-        .card-box {
-            background: rgba(0, 10, 0, 0.9);
-            padding: 25px 20px;
-            border: 1px solid var(--matrix-green);
-            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.15);
+        .box {
             width: 100%;
-            max-width: 380px;
+            max-width: 340px;
+            border: 1px solid var(--matrix-green);
+            padding: 25px 20px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
+            background: #020502;
             text-align: center;
         }
 
-        h2 {
-            margin-bottom: 20px;
-            font-size: 20px;
-            letter-spacing: 1px;
-        }
-
-        .btn {
-            background: transparent;
-            color: var(--matrix-green);
-            border: 1px solid var(--matrix-green);
-            padding: 12px;
-            cursor: pointer;
-            font-size: 15px;
-            width: 100%;
-            transition: 0.2s;
-            text-transform: uppercase;
-        }
-
-        .btn:active {
-            background: var(--matrix-green);
-            color: #000;
-        }
+        h2 { font-size: 18px; margin-bottom: 20px; letter-spacing: 1px; }
 
         input {
             width: 100%;
@@ -111,107 +87,88 @@
             border: 1px solid var(--matrix-dark);
             color: var(--matrix-green);
             font-size: 14px;
-            border-radius: 0;
         }
 
         input:focus {
             outline: none;
             border-color: var(--matrix-green);
-            box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+            box-shadow: var(--border-glow);
         }
 
-        /* نظام التخطيط المرن للجوال والكمبيوتر */
-        .chat-layout {
-            display: flex;
+        .btn {
+            background: transparent;
+            color: var(--matrix-green);
+            border: 1px solid var(--matrix-green);
+            padding: 12px;
+            width: 100%;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn:active { background: var(--matrix-green); color: #000; }
+
+        /* شاشات الجوال المتكاملة */
+        .mobile-view {
             width: 100%;
             height: 100%;
+            display: flex;
+            flex-direction: column;
             position: relative;
             overflow: hidden;
         }
 
-        .sidebar {
-            width: 320px;
-            background: #020802;
-            border-left: 1px solid var(--matrix-dark);
+        .pane {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            z-index: 5;
-            transition: transform 0.3s ease;
+            transition: transform 0.25s ease-in-out;
         }
 
-        .sidebar-header {
-            padding: 12px;
+        #chatPane {
+            transform: translateX(100%);
+            z-index: 20;
+        }
+
+        .app-container.in-chat #chatPane {
+            transform: translateX(0);
+        }
+        .app-container.in-chat #homePane {
+            transform: translateX(-100%);
+        }
+
+        .pane-header {
+            padding: 12px 15px;
             border-bottom: 1px solid var(--matrix-dark);
-            background: #000;
-        }
-
-        .profile-row {
+            background: #030803;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            font-size: 13px;
+            min-height: 52px;
         }
 
-        .section-title {
-            padding: 8px 12px;
-            font-size: 11px;
-            color: var(--matrix-dark);
-            border-bottom: 1px dashed var(--matrix-dark);
-            background: #010c01;
-        }
-
-        .users-list {
+        .list-container {
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        .user-item {
-            padding: 12px;
-            border-bottom: 1px solid #001a00;
-            cursor: pointer;
-        }
-
-        .user-item:active {
-            background: #002200;
-        }
-
-        .user-item h4 { font-size: 14px; margin-bottom: 3px; }
-        .user-item span { font-size: 11px; color: var(--matrix-dark); }
-
-        .chat-area {
-            flex: 1;
+        .user-row {
+            padding: 15px;
+            border-bottom: 1px solid #001500;
             display: flex;
-            flex-direction: column;
-            background: #000;
-            height: 100%;
-            position: relative;
-        }
-
-        .chat-header {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--matrix-dark);
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            background: #020502;
-            min-height: 50px;
+            align-items: center;
         }
 
-        .back-btn {
-            display: none;
-            background: transparent;
-            color: var(--matrix-green);
-            border: 1px solid var(--matrix-green);
-            padding: 4px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
+        .user-row:active { background: #002200; }
 
-        .messages-box {
+        .messages-area {
             flex: 1;
             padding: 15px;
             overflow-y: auto;
@@ -221,171 +178,124 @@
             gap: 12px;
         }
 
-        .message {
-            max-width: 80%;
-            padding: 10px 12px;
+        .msg {
+            max-width: 82%;
+            padding: 10px 14px;
             font-size: 14px;
             line-height: 1.4;
             word-break: break-word;
             position: relative;
         }
 
+        .msg.sent {
+            align-self: flex-start;
+            border-right: 2px solid var(--matrix-green);
+            background: #001400;
+        }
+
+        .msg.received {
+            align-self: flex-end;
+            border-left: 2px solid var(--matrix-dark);
+            background: #050505;
+            color: #ccc;
+        }
+
         .msg-time {
             font-size: 9px;
             display: block;
             margin-top: 4px;
-            opacity: 0.6;
+            opacity: 0.5;
             text-align: left;
         }
 
-        .message.sent {
-            align-self: flex-start;
-            border-right: 2px solid var(--matrix-green);
-            background: #001100;
-        }
-
-        .message.received {
-            align-self: flex-end;
-            border-left: 2px solid var(--matrix-dark);
-            background: #050505;
-            color: #bbb;
-        }
-
-        .chat-input-box {
+        .input-bar {
             padding: 10px;
             border-top: 1px solid var(--matrix-dark);
+            background: #020502;
             display: flex;
             gap: 8px;
-            background: #000;
-            align-items: center;
         }
 
-        .chat-input-box input {
-            margin-bottom: 0;
-            flex: 1;
-        }
+        .input-bar input { margin-bottom: 0; flex: 1; }
+        .input-bar .btn { width: 75px; padding: 10px; }
 
-        .chat-input-box .btn {
-            width: 85px;
-            padding: 10px;
-        }
-
-        .small-btn {
-            padding: 3px 6px;
-            font-size: 11px;
-            border: 1px solid var(--matrix-dark);
+        .mini-btn {
             background: transparent;
+            border: 1px solid var(--matrix-dark);
             color: var(--matrix-dark);
+            padding: 4px 8px;
+            font-size: 11px;
             cursor: pointer;
         }
+        .mini-btn:hover { border-color: var(--matrix-green); color: var(--matrix-green); }
 
-        /* تحسين التجاوب الكلي للهواتف الذكية */
-        @media (max-width: 768px) {
-            .back-btn { display: inline-block; }
-            
-            .sidebar {
-                width: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                transform: translateX(0);
-            }
-
-            .chat-area {
-                width: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                transform: translateX(100%);
-                transition: transform 0.25s ease-in-out;
-            }
-
-            /* التبديل السلس بين القائمة والشات بالموبايل */
-            .app-container.chat-active .sidebar {
-                transform: translateX(-100%);
-            }
-            .app-container.chat-active .chat-area {
-                transform: translateX(0);
-            }
-        }
-
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--matrix-dark); }
+        .error-msg { color: var(--danger); font-size: 12px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="system-log" id="sysLog">SYS_ONLINE | PING: 12ms</div>
+    <div class="sys-bar" id="sysStatus">SECURE_LINK_OK</div>
 
     <div class="app-container" id="appContainer">
         
         <!-- 1. شاشة تسجيل الدخول -->
         <div id="loginScreen" class="screen">
-            <div class="card-box">
-                <h2>[ SECURE LOGIN ]</h2>
-                <button class="btn" onclick="loginWithGoogle()">> GOOGLE AUTH</button>
+            <div class="box">
+                <h2>[ MOBILE_AUTH ]</h2>
+                <button class="btn" onclick="loginWithGoogle()">> GOOGLE SIGN-IN</button>
             </div>
         </div>
 
-        <!-- 2. شاشة إكمال الملف -->
+        <!-- 2. شاشة الملف الشخصي -->
         <div id="profileScreen" class="screen hidden">
-            <div class="card-box">
-                <h2>[ CONFIGURE ID ]</h2>
-                <div id="profileError" style="color: var(--danger); margin-bottom:10px; font-size: 12px;"></div>
-                <input type="text" id="fullName" placeholder="> FULL_NAME">
+            <div class="box">
+                <h2>[ SETUP PROFILE ]</h2>
+                <div id="profileError" class="error-msg"></div>
+                <input type="text" id="fullName" placeholder="> FULL NAME">
                 <input type="text" id="username" placeholder="> USERNAME">
-                <input type="text" id="uniqueId" placeholder="> 4_DIGIT_PIN" maxlength="4">
-                <button class="btn" onclick="saveProfile()">> INITIALIZE</button>
+                <input type="text" id="uniqueId" placeholder="> 4-DIGIT PIN" maxlength="4">
+                <button class="btn" onclick="saveProfile()">> SAVE & START</button>
             </div>
         </div>
 
-        <!-- 3. الشاشة الرئيسية -->
+        <!-- 3. الشاشة الرئيسية للموبايل -->
         <div id="mainScreen" class="screen hidden" style="padding: 0;">
-            <div class="chat-layout">
+            <div class="mobile-view">
                 
-                <!-- الشريط الجانبي -->
-                <div class="sidebar" id="sidebarArea">
-                    <div class="sidebar-header">
-                        <div class="profile-row">
-                            <div><span style="color:#fff" id="myNameDisplay">...</span> <span id="myIdDisplay" style="color:var(--matrix-dark)"></span></div>
-                            <button class="small-btn" onclick="logout()">EXIT</button>
+                <!-- الواجهة الرئيسية (القائمة والبحث) -->
+                <div class="pane" id="homePane">
+                    <div class="pane-header">
+                        <div>
+                            <span id="myNameDisplay" style="color:#fff; font-size:14px;">...</span>
+                            <span id="myIdDisplay" style="color:var(--matrix-dark); font-size:12px;"></span>
                         </div>
-                        <div class="search-box">
-                            <input type="text" id="searchIdInput" placeholder="> SEARCH 4-DIGIT ID" oninput="searchUser()">
-                        </div>
+                        <button class="mini-btn" onclick="logout()">LOGOUT</button>
                     </div>
-                    
-                    <div id="searchResultsArea" style="display: none;">
-                        <div class="section-title">SEARCH_RESULT:</div>
-                        <div class="users-list" id="searchContainer"></div>
+                    <div style="padding: 10px; background: #000; border-bottom: 1px solid var(--matrix-dark);">
+                        <input type="text" id="searchIdInput" placeholder="> SEARCH 4-DIGIT ID..." oninput="searchUser()" style="margin-bottom:0;">
                     </div>
-
-                    <div id="recentChatsArea">
-                        <div class="section-title">SAVED_CHATS:</div>
-                        <div class="users-list" id="recentChatsContainer">
-                            <div style="padding:15px; font-size:11px; color:var(--matrix-dark)">NO_CHATS_YET</div>
-                        </div>
+                    <div class="list-container" id="mainListContainer">
+                        <div style="padding:15px; font-size:11px; color:var(--matrix-dark); text-align:center;">NO_SAVED_CHATS</div>
                     </div>
                 </div>
 
-                <!-- منطقة الشات -->
-                <div class="chat-area">
-                    <div class="chat-header">
-                        <div style="display:flex; align-items:center; overflow:hidden;">
-                            <button class="back-btn" onclick="closeMobileChat()">◀ BACK</button>
-                            <span id="activeChatHeader" style="font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">SELECT_TARGET</span>
+                <!-- واجهة المحادثة المباشرة -->
+                <div class="pane" id="chatPane">
+                    <div class="pane-header">
+                        <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+                            <button class="mini-btn" onclick="closeChat()">◀ BACK</button>
+                            <span id="activeChatTitle" style="font-size:13px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">TARGET</span>
                         </div>
-                        <button class="small-btn" onclick="clearTerminal()" id="clearBtn" style="display:none;">CLEAR</button>
+                        <button class="mini-btn" onclick="clearScreenLogs()" style="border-color:var(--danger); color:var(--danger);">CLEAR</button>
                     </div>
                     
-                    <div class="messages-box" id="messagesBox">
-                        <div style="text-align:center; opacity:0.4; margin-top:40px; font-size:12px;">ENCRYPTED CHANNEL READY</div>
+                    <div class="messages-area" id="messagesBox">
+                        <div style="text-align:center; opacity:0.3; margin-top:30px; font-size:11px;">SECURE TUNNEL OPENED</div>
                     </div>
                     
-                    <div class="chat-input-box" id="chatInputArea" style="display: none;">
-                        <input type="text" id="messageInput" placeholder="> TYPE_MSG..." onkeypress="checkEnter(event)">
-                        <button class="btn" onclick="sendMessage()">SEND</button>
+                    <div class="input-bar">
+                        <input type="text" id="messageInput" placeholder="> TYPE MESSAGE..." onkeypress="onEnterPress(event)">
+                        <button class="btn" onclick="sendTextMessage()">SEND</button>
                     </div>
                 </div>
 
@@ -393,7 +303,7 @@
         </div>
     </div>
 
-    <!-- Firebase Scripts -->
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -416,11 +326,11 @@
         let currentUser = null;
         let userData = null;
         let activeChatUser = null;
-        let unsubscribeMessages = null;
+        let messagesUnsubscribe = null;
 
         window.loginWithGoogle = async function() {
             const provider = new GoogleAuthProvider();
-            try { await signInWithPopup(auth, provider); } catch (e) {}
+            try { await signInWithPopup(auth, provider); } catch(e) {}
         };
 
         window.logout = async function() {
@@ -434,8 +344,8 @@
                 onSnapshot(doc(db, "users", user.uid), (docSnap) => {
                     if (docSnap.exists()) {
                         userData = docSnap.data();
-                        showMainScreen();
-                        renderRecentChats();
+                        showDashboard();
+                        renderChatList();
                     } else {
                         document.getElementById('loginScreen').classList.add('hidden');
                         document.getElementById('profileScreen').classList.remove('hidden');
@@ -451,40 +361,46 @@
             const fullName = document.getElementById('fullName').value.trim();
             const username = document.getElementById('username').value.trim();
             const uniqueId = document.getElementById('uniqueId').value.trim();
-            const errorDiv = document.getElementById('profileError');
+            const errDiv = document.getElementById('profileError');
 
-            if (!fullName || !username || !uniqueId) { errorDiv.innerText = "FILL_ALL_FIELDS"; return; }
-            if (uniqueId.length !== 4 || isNaN(uniqueId)) { errorDiv.innerText = "PIN_MUST_BE_4_DIGITS"; return; }
+            if (!fullName || !username || !uniqueId) { errDiv.innerText = "FILL_ALL_FIELDS"; return; }
+            if (uniqueId.length !== 4 || isNaN(uniqueId)) { errDiv.innerText = "PIN_MUST_BE_4_DIGITS"; return; }
 
             const q = query(collection(db, "users"), where("uniqueId", "==", uniqueId));
             const snap = await getDocs(q);
-            if (!snap.empty) { errorDiv.innerText = "ID_ALREADY_TAKEN"; return; }
+            if (!snap.empty) { errDiv.innerText = "ID_ALREADY_TAKEN"; return; }
 
             userData = { uid: currentUser.uid, fullName, username, uniqueId, recentChats: [] };
             await setDoc(doc(db, "users", currentUser.uid), userData);
-            showMainScreen();
+            showDashboard();
         };
 
-        function showMainScreen() {
-            document.getElementById('profileScreen').classList.add('hidden');
+        function showDashboard() {
             document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('profileScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
             document.getElementById('myNameDisplay').innerText = userData.fullName;
             document.getElementById('myIdDisplay').innerText = `#${userData.uniqueId}`;
         }
 
-        function renderRecentChats() {
-            const container = document.getElementById('recentChatsContainer');
-            if (!userData.recentChats || userData.recentChats.length === 0) {
-                container.innerHTML = `<div style="padding:12px; font-size:11px; color:var(--matrix-dark)">NO_CHATS</div>`;
+        function renderChatList(listToRender = null) {
+            const container = document.getElementById('mainListContainer');
+            const chats = listToRender || userData.recentChats || [];
+
+            if (chats.length === 0) {
+                container.innerHTML = `<div style="padding:15px; font-size:11px; color:var(--matrix-dark); text-align:center;">NO_CHATS_FOUND</div>`;
                 return;
             }
+
             container.innerHTML = '';
-            [...userData.recentChats].reverse().forEach(user => {
+            [...chats].reverse().forEach(u => {
                 container.innerHTML += `
-                    <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
-                        <h4>> ${user.fullName}</h4>
-                        <span>#${user.uniqueId}</span>
+                    <div class="user-row" onclick='openChatWindow(${JSON.stringify(u)})'>
+                        <div>
+                            <h4 style="font-size:13px; color:#fff;">> ${u.fullName}</h4>
+                            <span style="font-size:10px; color:var(--matrix-dark);">PIN: #${u.uniqueId}</span>
+                        </div>
+                        <span style="font-size:10px; color:var(--matrix-green);">CONNECT ▶</span>
                     </div>
                 `;
             });
@@ -492,116 +408,115 @@
 
         window.searchUser = async function() {
             const queryText = document.getElementById('searchIdInput').value.trim();
-            const searchArea = document.getElementById('searchResultsArea');
-            const recentArea = document.getElementById('recentChatsArea');
-            const container = document.getElementById('searchContainer');
-
             if (queryText.length === 0) {
-                searchArea.style.display = 'none';
-                recentArea.style.display = 'block';
+                renderChatList();
                 return;
             }
-
-            searchArea.style.display = 'block';
-            recentArea.style.display = 'none';
-            container.innerHTML = '';
 
             const q = query(collection(db, "users"), where("uniqueId", "==", queryText));
-            const querySnapshot = await getDocs(q);
+            const snap = await getDocs(q);
+            const container = document.getElementById('mainListContainer');
 
-            if (querySnapshot.empty) {
-                container.innerHTML = `<div style="padding:12px; font-size:11px; color:var(--danger)">NOT_FOUND</div>`;
+            if (snap.empty) {
+                container.innerHTML = `<div style="padding:15px; font-size:11px; color:var(--danger); text-align:center;">TARGET_NOT_FOUND</div>`;
                 return;
             }
 
-            querySnapshot.forEach((docSnap) => {
-                const user = docSnap.data();
-                if (user.uid !== currentUser.uid) {
+            container.innerHTML = '';
+            snap.forEach(docSnap => {
+                const u = docSnap.data();
+                if (u.uid !== currentUser.uid) {
                     container.innerHTML += `
-                        <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
-                            <h4>> ${user.fullName}</h4>
-                            <span>#${user.uniqueId}</span>
+                        <div class="user-row" onclick='openChatWindow(${JSON.stringify(u)})'>
+                            <div>
+                                <h4 style="font-size:13px; color:#fff;">> ${u.fullName}</h4>
+                                <span style="font-size:10px; color:var(--matrix-dark);">PIN: #${u.uniqueId}</span>
+                            </div>
+                            <span style="font-size:10px; color:var(--matrix-green);">INITIATE ▶</span>
                         </div>
                     `;
                 }
             });
         };
 
-        window.selectUser = function(user) {
-            activeChatUser = user;
-            document.getElementById('activeChatHeader').innerHTML = `${user.fullName} <span style="color:var(--matrix-dark)">(#${user.uniqueId})</span>`;
-            document.getElementById('chatInputArea').style.display = 'flex';
-            document.getElementById('clearBtn').style.display = 'block';
-            
-            // تفعيل الشاشة للموبايل
-            document.getElementById('appContainer').classList.add('chat-active');
-            loadMessages();
+        window.openChatWindow = function(targetUser) {
+            activeChatUser = targetUser;
+            document.getElementById('activeChatTitle').innerText = `${targetUser.fullName} (#${targetUser.uniqueId})`;
+            document.getElementById('appContainer').classList.add('in-chat');
+            loadActiveMessages();
         };
 
-        window.closeMobileChat = function() {
-            document.getElementById('appContainer').classList.remove('chat-active');
+        window.closeChat = function() {
+            document.getElementById('appContainer').classList.remove('in-chat');
+            activeChatUser = null;
+            if (messagesUnsubscribe) messagesUnsubscribe();
+            renderChatList();
         };
 
-        window.sendMessage = async function() {
-            const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-            if (!text || !activeChatUser) return;
+        window.sendTextMessage = async function() {
+            const inputField = document.getElementById('messageInput');
+            const txt = inputField.value.trim();
+            if (!txt || !activeChatUser) return;
+
+            inputField.value = '';
 
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
-            input.value = ''; 
 
+            // إرسال الرسالة لقاعدة البيانات
             await addDoc(collection(db, "chats", chatId, "messages"), {
-                text: text,
+                text: txt,
                 senderId: currentUser.uid,
                 timestamp: Date.now()
             });
 
-            const chatObjForMe = { uid: activeChatUser.uid, fullName: activeChatUser.fullName, uniqueId: activeChatUser.uniqueId, username: activeChatUser.username };
-            const chatObjForThem = { uid: currentUser.uid, fullName: userData.fullName, uniqueId: userData.uniqueId, username: userData.username };
-            
-            await updateDoc(doc(db, "users", currentUser.uid), { recentChats: arrayUnion(chatObjForMe) });
-            await updateDoc(doc(db, "users", activeChatUser.uid), { recentChats: arrayUnion(chatObjForThem) });
+            // تحديث سجل المحفوظات للطرفين
+            const myObj = { uid: currentUser.uid, fullName: userData.fullName, uniqueId: userData.uniqueId, username: userData.username };
+            const targetObj = { uid: activeChatUser.uid, fullName: activeChatUser.fullName, uniqueId: activeChatUser.uniqueId, username: activeChatUser.username };
+
+            await updateDoc(doc(db, "users", currentUser.uid), { recentChats: arrayUnion(targetObj) });
+            await updateDoc(doc(db, "users", activeChatUser.uid), { recentChats: arrayUnion(myObj) });
         };
 
-        window.checkEnter = function(e) { if (e.key === 'Enter') sendMessage(); };
-
-        window.clearTerminal = function() {
-            document.getElementById('messagesBox').innerHTML = `<div style="text-align:center; opacity:0.4; margin-top:40px; font-size:12px;">LOGS_CLEARED</div>`;
+        window.onEnterPress = function(e) {
+            if (e.key === 'Enter') sendTextMessage();
         };
 
-        function formatTime(ms) {
+        window.clearScreenLogs = function() {
+            document.getElementById('messagesBox').innerHTML = `<div style="text-align:center; opacity:0.3; margin-top:30px; font-size:11px;">SCREEN_CLEARED</div>`;
+        };
+
+        function formatHour(ms) {
             const d = new Date(ms);
             let h = d.getHours(), m = d.getMinutes();
-            m = m < 10 ? '0'+m : m;
-            return `${h}:${m}`;
+            return `${h}:${m < 10 ? '0'+m : m}`;
         }
 
-        function loadMessages() {
+        function loadActiveMessages() {
             if (!activeChatUser) return;
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
-            const messagesBox = document.getElementById('messagesBox');
+            const box = document.getElementById('messagesBox');
 
-            if (unsubscribeMessages) unsubscribeMessages();
+            if (messagesUnsubscribe) messagesUnsubscribe();
 
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
             
-            unsubscribeMessages = onSnapshot(q, (snapshot) => {
-                messagesBox.innerHTML = '';
+            messagesUnsubscribe = onSnapshot(q, (snapshot) => {
+                box.innerHTML = '';
                 if (snapshot.empty) {
-                    messagesBox.innerHTML = `<div style="text-align:center; opacity:0.4; margin-top:40px; font-size:12px;">SECURE_LOGS_EMPTY</div>`;
+                    box.innerHTML = `<div style="text-align:center; opacity:0.3; margin-top:30px; font-size:11px;">NO_MESSAGES_YET</div>`;
                     return;
                 }
-                snapshot.forEach((doc) => {
-                    const msg = doc.data();
-                    const isMe = msg.senderId === currentUser.uid;
-                    messagesBox.innerHTML += `
-                        <div class="message ${isMe ? 'sent' : 'received'}">
-                            ${msg.text}
-                            <span class="msg-time">${formatTime(msg.timestamp)}</span>
+                snapshot.forEach(docSnap => {
+                    const m = docSnap.data();
+                    const mine = m.senderId === currentUser.uid;
+                    box.innerHTML += `
+                        <div class="msg ${mine ? 'sent' : 'received'}">
+                            ${m.text}
+                            <span class="msg-time">${formatHour(m.timestamp)}</span>
                         </div>
                     `;
                 });
-                messagesBox.scrollTop = messagesBox.scrollHeight;
+                box.scrollTop = box.scrollHeight;
             });
         }
     </script>
