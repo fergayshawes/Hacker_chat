@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SECURE TERMINAL CHAT</title>
+    <title>SECURE TERMINAL CHAT v2.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #050505;
+            --bg-color: #030712;
             --matrix-green: #00ff41;
-            --matrix-dark: #008f11;
-            --border-glow: 0 0 10px rgba(0, 255, 65, 0.5);
+            --matrix-dark: #00751a;
+            --border-glow: 0 0 12px rgba(0, 255, 65, 0.3);
             --danger: #ff003c;
         }
 
@@ -18,44 +18,38 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Share Tech Mono', monospace; /* خط الهاكرز */
+            font-family: 'Share Tech Mono', monospace;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        body, html {
             background-color: var(--bg-color);
             color: var(--matrix-green);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
+            position: fixed; /* منع الـ Bounce المزعج بالموبايل */
         }
 
         .app-container {
-            width: 100%;
-            max-width: 1100px;
-            height: 95vh;
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid var(--matrix-green);
-            box-shadow: var(--border-glow);
+            width: 100vw;
+            height: 100vh;
+            background: #000;
             display: flex;
             position: relative;
+            overflow: hidden;
         }
 
-        /* Terminal Header Log */
+        /* تيرمنال سبيس علوي */
         .system-log {
             position: absolute;
-            top: -25px;
+            top: 2px;
             left: 10px;
-            font-size: 12px;
+            font-size: 10px;
             color: var(--matrix-dark);
-            animation: blink 1s infinite;
+            z-index: 100;
+            pointer-events: none;
         }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .screen {
             position: absolute;
@@ -68,7 +62,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
             z-index: 10;
         }
 
@@ -77,164 +71,171 @@
         }
 
         .card-box {
-            background: transparent;
-            padding: 40px;
+            background: rgba(0, 10, 0, 0.9);
+            padding: 25px 20px;
             border: 1px solid var(--matrix-green);
-            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.2);
+            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.15);
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             text-align: center;
         }
 
         h2 {
-            margin-bottom: 25px;
-            font-size: 22px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-size: 20px;
+            letter-spacing: 1px;
         }
 
         .btn {
             background: transparent;
             color: var(--matrix-green);
             border: 1px solid var(--matrix-green);
-            padding: 12px 20px;
+            padding: 12px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             width: 100%;
-            transition: all 0.2s;
+            transition: 0.2s;
             text-transform: uppercase;
         }
 
-        .btn:hover {
+        .btn:active {
             background: var(--matrix-green);
-            color: var(--bg-color);
-            box-shadow: var(--border-glow);
+            color: #000;
         }
 
         input {
             width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            background: transparent;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #000;
             border: 1px solid var(--matrix-dark);
             color: var(--matrix-green);
-            font-size: 15px;
+            font-size: 14px;
+            border-radius: 0;
         }
 
         input:focus {
             outline: none;
             border-color: var(--matrix-green);
-            box-shadow: inset 0 0 5px rgba(0, 255, 65, 0.5);
-        }
-        
-        input::placeholder {
-            color: var(--matrix-dark);
+            box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
         }
 
-        /* Layout */
+        /* نظام التخطيط المرن للجوال والكمبيوتر */
         .chat-layout {
             display: flex;
             width: 100%;
             height: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
         .sidebar {
             width: 320px;
+            background: #020802;
             border-left: 1px solid var(--matrix-dark);
             display: flex;
             flex-direction: column;
-            background: rgba(0, 20, 0, 0.3);
+            height: 100%;
+            z-index: 5;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-header {
-            padding: 15px;
+            padding: 12px;
             border-bottom: 1px solid var(--matrix-dark);
+            background: #000;
         }
 
         .profile-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 13px;
         }
 
-        .search-box input { margin-bottom: 0; }
-
         .section-title {
-            padding: 10px 15px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 11px;
             color: var(--matrix-dark);
             border-bottom: 1px dashed var(--matrix-dark);
-            background: black;
+            background: #010c01;
         }
 
         .users-list {
             flex: 1;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .user-item {
-            padding: 15px;
-            border-bottom: 1px solid #002200;
+            padding: 12px;
+            border-bottom: 1px solid #001a00;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .user-item:hover, .user-item.active {
-            background: #001a00;
-            border-left: 3px solid var(--matrix-green);
+        .user-item:active {
+            background: #002200;
         }
 
-        .user-item h4 { font-size: 15px; margin-bottom: 5px; }
-        .user-item span { font-size: 12px; color: var(--matrix-dark); }
+        .user-item h4 { font-size: 14px; margin-bottom: 3px; }
+        .user-item span { font-size: 11px; color: var(--matrix-dark); }
 
         .chat-area {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: #000;
+            height: 100%;
+            position: relative;
         }
 
         .chat-header {
-            padding: 15px;
+            padding: 12px 15px;
             border-bottom: 1px solid var(--matrix-dark);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: #020502;
+            min-height: 50px;
         }
 
         .back-btn {
-            display: none; /* يظهر بس ع الموبايل */
+            display: none;
             background: transparent;
             color: var(--matrix-green);
             border: 1px solid var(--matrix-green);
-            padding: 5px 10px;
+            padding: 4px 8px;
+            font-size: 12px;
             cursor: pointer;
+            margin-left: 10px;
         }
 
         .messages-box {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .message {
-            max-width: 75%;
-            padding: 10px 15px;
-            font-size: 15px;
+            max-width: 80%;
+            padding: 10px 12px;
+            font-size: 14px;
             line-height: 1.4;
             word-break: break-word;
             position: relative;
         }
 
         .msg-time {
-            font-size: 10px;
+            font-size: 9px;
             display: block;
-            margin-top: 5px;
-            opacity: 0.7;
+            margin-top: 4px;
+            opacity: 0.6;
+            text-align: left;
         }
 
         .message.sent {
@@ -246,79 +247,84 @@
         .message.received {
             align-self: flex-end;
             border-left: 2px solid var(--matrix-dark);
-            background: #000500;
-            color: #ccc;
+            background: #050505;
+            color: #bbb;
         }
 
         .chat-input-box {
-            padding: 15px;
+            padding: 10px;
             border-top: 1px solid var(--matrix-dark);
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            background: #000;
+            align-items: center;
         }
 
-        .chat-input-box input { margin-bottom: 0; }
-        .chat-input-box .btn { width: 100px; }
+        .chat-input-box input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .chat-input-box .btn {
+            width: 85px;
+            padding: 10px;
+        }
 
         .small-btn {
-            padding: 4px 8px;
-            font-size: 12px;
+            padding: 3px 6px;
+            font-size: 11px;
             border: 1px solid var(--matrix-dark);
             background: transparent;
             color: var(--matrix-dark);
             cursor: pointer;
         }
-        .small-btn:hover { border-color: var(--danger); color: var(--danger); }
 
-        /* سكرول بار الهاكرز */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--matrix-dark); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--matrix-green); }
-
-        /* ================================== */
-        /* التجاوب مع الموبايل (المهمة اللي طلبتها) */
-        /* ================================== */
+        /* تحسين التجاوب الكلي للهواتف الذكية */
         @media (max-width: 768px) {
-            .app-container { height: 100vh; border: none; box-shadow: none; }
-            .chat-layout { position: relative; overflow: hidden; }
+            .back-btn { display: inline-block; }
             
             .sidebar {
                 width: 100%;
-                height: 100%;
                 position: absolute;
-                z-index: 5;
-                transition: transform 0.3s ease;
-            }
-            
-            .chat-area {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                z-index: 4; /* تحت القائمة، وتظهر لما القائمة تختفي */
+                top: 0;
+                left: 0;
+                transform: translateX(0);
             }
 
-            /* لما نختار شخص، نخفي القائمة بإزاحتها لليمين */
-            .sidebar.hide-mobile {
+            .chat-area {
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
                 transform: translateX(100%);
+                transition: transform 0.25s ease-in-out;
             }
-            
-            /* إظهار زر الرجوع في الموبايل */
-            .back-btn { display: block; margin-left: 10px; }
+
+            /* التبديل السلس بين القائمة والشات بالموبايل */
+            .app-container.chat-active .sidebar {
+                transform: translateX(-100%);
+            }
+            .app-container.chat-active .chat-area {
+                transform: translateX(0);
+            }
         }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--matrix-dark); }
     </style>
 </head>
 <body>
 
-    <div class="system-log" id="sysLog">SYSTEM_READY > _</div>
+    <div class="system-log" id="sysLog">SYS_ONLINE | PING: 12ms</div>
 
-    <div class="app-container">
+    <div class="app-container" id="appContainer">
         
         <!-- 1. شاشة تسجيل الدخول -->
         <div id="loginScreen" class="screen">
             <div class="card-box">
                 <h2>[ SECURE LOGIN ]</h2>
-                <button class="btn" onclick="loginWithGoogle()">> INITIALIZE GOOGLE AUTH</button>
+                <button class="btn" onclick="loginWithGoogle()">> GOOGLE AUTH</button>
             </div>
         </div>
 
@@ -326,11 +332,11 @@
         <div id="profileScreen" class="screen hidden">
             <div class="card-box">
                 <h2>[ CONFIGURE ID ]</h2>
-                <div id="profileError" style="color: var(--danger); margin-bottom:10px; font-size: 13px;"></div>
-                <input type="text" id="fullName" placeholder="> ENTER_FULL_NAME">
-                <input type="text" id="username" placeholder="> ENTER_ALIAS (Username)">
-                <input type="text" id="uniqueId" placeholder="> SET_4_DIGIT_PIN" maxlength="4">
-                <button class="btn" onclick="saveProfile()">> EXECUTE</button>
+                <div id="profileError" style="color: var(--danger); margin-bottom:10px; font-size: 12px;"></div>
+                <input type="text" id="fullName" placeholder="> FULL_NAME">
+                <input type="text" id="username" placeholder="> USERNAME">
+                <input type="text" id="uniqueId" placeholder="> 4_DIGIT_PIN" maxlength="4">
+                <button class="btn" onclick="saveProfile()">> INITIALIZE</button>
             </div>
         </div>
 
@@ -338,27 +344,27 @@
         <div id="mainScreen" class="screen hidden" style="padding: 0;">
             <div class="chat-layout">
                 
-                <!-- الشريط الجانبي (المحادثات المحفوظة والبحث) -->
+                <!-- الشريط الجانبي -->
                 <div class="sidebar" id="sidebarArea">
                     <div class="sidebar-header">
                         <div class="profile-row">
-                            <div style="font-size: 14px;">USER: <span id="myNameDisplay" style="color:white">...</span> <br>ID: <span id="myIdDisplay" style="color:var(--matrix-dark)">...</span></div>
-                            <button class="small-btn" onclick="logout()">LOGOUT</button>
+                            <div><span style="color:#fff" id="myNameDisplay">...</span> <span id="myIdDisplay" style="color:var(--matrix-dark)"></span></div>
+                            <button class="small-btn" onclick="logout()">EXIT</button>
                         </div>
                         <div class="search-box">
-                            <input type="text" id="searchIdInput" placeholder="> SEARCH_TARGET_ID (4 DIGITS)" oninput="searchUser()">
+                            <input type="text" id="searchIdInput" placeholder="> SEARCH 4-DIGIT ID" oninput="searchUser()">
                         </div>
                     </div>
                     
                     <div id="searchResultsArea" style="display: none;">
-                        <div class="section-title">TARGET_LOCATED:</div>
+                        <div class="section-title">SEARCH_RESULT:</div>
                         <div class="users-list" id="searchContainer"></div>
                     </div>
 
                     <div id="recentChatsArea">
-                        <div class="section-title">ENCRYPTED_CONNECTIONS (محفوظة):</div>
+                        <div class="section-title">SAVED_CHATS:</div>
                         <div class="users-list" id="recentChatsContainer">
-                            <!-- المحادثات المحفوظة تظهر هنا -->
+                            <div style="padding:15px; font-size:11px; color:var(--matrix-dark)">NO_CHATS_YET</div>
                         </div>
                     </div>
                 </div>
@@ -366,20 +372,20 @@
                 <!-- منطقة الشات -->
                 <div class="chat-area">
                     <div class="chat-header">
-                        <div style="display:flex; align-items:center;">
-                            <button class="back-btn" onclick="closeMobileChat()">&#9664; BACK</button>
-                            <span id="activeChatHeader">AWAITING_TARGET_SELECTION...</span>
+                        <div style="display:flex; align-items:center; overflow:hidden;">
+                            <button class="back-btn" onclick="closeMobileChat()">◀ BACK</button>
+                            <span id="activeChatHeader" style="font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">SELECT_TARGET</span>
                         </div>
                         <button class="small-btn" onclick="clearTerminal()" id="clearBtn" style="display:none;">CLEAR</button>
                     </div>
                     
                     <div class="messages-box" id="messagesBox">
-                        <div style="text-align:center; opacity:0.5; margin-top:50px;">SELECT A CONNECTION TO INITIATE PROTOCOL</div>
+                        <div style="text-align:center; opacity:0.4; margin-top:40px; font-size:12px;">ENCRYPTED CHANNEL READY</div>
                     </div>
                     
                     <div class="chat-input-box" id="chatInputArea" style="display: none;">
-                        <input type="text" id="messageInput" placeholder="> TYPE_COMMAND..." onkeypress="checkEnter(event)">
-                        <button class="btn" onclick="sendMessage()">> SEND</button>
+                        <input type="text" id="messageInput" placeholder="> TYPE_MSG..." onkeypress="checkEnter(event)">
+                        <button class="btn" onclick="sendMessage()">SEND</button>
                     </div>
                 </div>
 
@@ -393,7 +399,6 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات مشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyAcqJlqxeCxehWuBlRsrIpL77ClTOYvgXo",
             authDomain: "program-73193.firebaseapp.com",
@@ -412,17 +417,10 @@
         let userData = null;
         let activeChatUser = null;
         let unsubscribeMessages = null;
-        let userUnsubscribe = null;
-
-        function updateSysLog(msg) {
-            document.getElementById('sysLog').innerText = `SYSTEM_LOG > ${msg} _`;
-        }
 
         window.loginWithGoogle = async function() {
-            updateSysLog("INITIATING HANDSHAKE...");
             const provider = new GoogleAuthProvider();
-            try { await signInWithPopup(auth, provider); } 
-            catch (error) { updateSysLog("HANDSHAKE_FAILED"); }
+            try { await signInWithPopup(auth, provider); } catch (e) {}
         };
 
         window.logout = async function() {
@@ -433,14 +431,11 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                updateSysLog("AUTHENTICATED. FETCHING_DATA...");
-                
-                // جلب بيانات المستخدم وعمل مستمع (Listener) للمحادثات المحفوظة
-                userUnsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                onSnapshot(doc(db, "users", user.uid), (docSnap) => {
                     if (docSnap.exists()) {
                         userData = docSnap.data();
                         showMainScreen();
-                        renderRecentChats(); // ميزة الحفظ الدائم
+                        renderRecentChats();
                     } else {
                         document.getElementById('loginScreen').classList.add('hidden');
                         document.getElementById('profileScreen').classList.remove('hidden');
@@ -458,12 +453,12 @@
             const uniqueId = document.getElementById('uniqueId').value.trim();
             const errorDiv = document.getElementById('profileError');
 
-            if (!fullName || !username || !uniqueId) { errorDiv.innerText = "MISSING_PARAMETERS"; return; }
-            if (uniqueId.length !== 4 || isNaN(uniqueId)) { errorDiv.innerText = "ID_MUST_BE_4_NUMBERS"; return; }
+            if (!fullName || !username || !uniqueId) { errorDiv.innerText = "FILL_ALL_FIELDS"; return; }
+            if (uniqueId.length !== 4 || isNaN(uniqueId)) { errorDiv.innerText = "PIN_MUST_BE_4_DIGITS"; return; }
 
             const q = query(collection(db, "users"), where("uniqueId", "==", uniqueId));
             const snap = await getDocs(q);
-            if (!snap.empty) { errorDiv.innerText = "ID_ALREADY_IN_USE. ABORT."; return; }
+            if (!snap.empty) { errorDiv.innerText = "ID_ALREADY_TAKEN"; return; }
 
             userData = { uid: currentUser.uid, fullName, username, uniqueId, recentChats: [] };
             await setDoc(doc(db, "users", currentUser.uid), userData);
@@ -476,23 +471,20 @@
             document.getElementById('mainScreen').classList.remove('hidden');
             document.getElementById('myNameDisplay').innerText = userData.fullName;
             document.getElementById('myIdDisplay').innerText = `#${userData.uniqueId}`;
-            updateSysLog("SECURE_CHANNEL_OPEN");
         }
 
-        // --- ميزة المحادثات المحفوظة ---
         function renderRecentChats() {
             const container = document.getElementById('recentChatsContainer');
             if (!userData.recentChats || userData.recentChats.length === 0) {
-                container.innerHTML = `<div style="padding:15px; font-size:12px; color:var(--matrix-dark)">NO_DATA_FOUND.</div>`;
+                container.innerHTML = `<div style="padding:12px; font-size:11px; color:var(--matrix-dark)">NO_CHATS</div>`;
                 return;
             }
             container.innerHTML = '';
-            // عرض المحادثات بالعكس (الأحدث فوق)
             [...userData.recentChats].reverse().forEach(user => {
                 container.innerHTML += `
                     <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
                         <h4>> ${user.fullName}</h4>
-                        <span>ID: #${user.uniqueId} | @${user.username}</span>
+                        <span>#${user.uniqueId}</span>
                     </div>
                 `;
             });
@@ -518,19 +510,17 @@
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
-                container.innerHTML = `<div style="padding:15px; font-size:12px; color:var(--danger)">TARGET_NOT_FOUND</div>`;
+                container.innerHTML = `<div style="padding:12px; font-size:11px; color:var(--danger)">NOT_FOUND</div>`;
                 return;
             }
 
             querySnapshot.forEach((docSnap) => {
                 const user = docSnap.data();
-                if (user.uid === currentUser.uid) {
-                    container.innerHTML = `<div style="padding:15px; font-size:12px; color:var(--danger)">CANNOT_CONNECT_TO_SELF</div>`;
-                } else {
+                if (user.uid !== currentUser.uid) {
                     container.innerHTML += `
                         <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
                             <h4>> ${user.fullName}</h4>
-                            <span>ID: #${user.uniqueId}</span>
+                            <span>#${user.uniqueId}</span>
                         </div>
                     `;
                 }
@@ -539,21 +529,17 @@
 
         window.selectUser = function(user) {
             activeChatUser = user;
-            document.getElementById('activeChatHeader').innerHTML = `TARGET: <span style="color:#fff">${user.fullName}</span> [#${user.uniqueId}]`;
+            document.getElementById('activeChatHeader').innerHTML = `${user.fullName} <span style="color:var(--matrix-dark)">(#${user.uniqueId})</span>`;
             document.getElementById('chatInputArea').style.display = 'flex';
             document.getElementById('clearBtn').style.display = 'block';
             
-            // تفعيل الموبايل (إخفاء القائمة وإظهار الشات)
-            if(window.innerWidth <= 768) {
-                document.getElementById('sidebarArea').classList.add('hide-mobile');
-            }
-
+            // تفعيل الشاشة للموبايل
+            document.getElementById('appContainer').classList.add('chat-active');
             loadMessages();
         };
 
-        // زر الرجوع في الموبايل
         window.closeMobileChat = function() {
-            document.getElementById('sidebarArea').classList.remove('hide-mobile');
+            document.getElementById('appContainer').classList.remove('chat-active');
         };
 
         window.sendMessage = async function() {
@@ -570,36 +556,24 @@
                 timestamp: Date.now()
             });
 
-            // تحديث قائمة المحادثات (حفظ الشخص عندك وعند الطرف الثاني)
             const chatObjForMe = { uid: activeChatUser.uid, fullName: activeChatUser.fullName, uniqueId: activeChatUser.uniqueId, username: activeChatUser.username };
             const chatObjForThem = { uid: currentUser.uid, fullName: userData.fullName, uniqueId: userData.uniqueId, username: userData.username };
             
-            // إزالة الشخص لو كان موجود أصلاً وإضافته من جديد ليكون بالأعلى (محاكاة)
-            // بس للتبسيط نستخدم arrayUnion
-            await updateDoc(doc(db, "users", currentUser.uid), {
-                recentChats: arrayUnion(chatObjForMe)
-            });
-            await updateDoc(doc(db, "users", activeChatUser.uid), {
-                recentChats: arrayUnion(chatObjForThem)
-            });
+            await updateDoc(doc(db, "users", currentUser.uid), { recentChats: arrayUnion(chatObjForMe) });
+            await updateDoc(doc(db, "users", activeChatUser.uid), { recentChats: arrayUnion(chatObjForThem) });
         };
 
         window.checkEnter = function(e) { if (e.key === 'Enter') sendMessage(); };
 
-        // زر مسح التيرمنال (ينظف الشاشة فقط)
         window.clearTerminal = function() {
-            document.getElementById('messagesBox').innerHTML = `<div style="text-align:center; opacity:0.5; margin-top:50px;">TERMINAL_CLEARED...</div>`;
+            document.getElementById('messagesBox').innerHTML = `<div style="text-align:center; opacity:0.4; margin-top:40px; font-size:12px;">LOGS_CLEARED</div>`;
         };
 
         function formatTime(ms) {
             const d = new Date(ms);
-            let h = d.getHours();
-            let m = d.getMinutes();
-            let ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12;
-            h = h ? h : 12; 
+            let h = d.getHours(), m = d.getMinutes();
             m = m < 10 ? '0'+m : m;
-            return `${h}:${m} ${ampm}`;
+            return `${h}:${m}`;
         }
 
         function loadMessages() {
@@ -614,7 +588,7 @@
             unsubscribeMessages = onSnapshot(q, (snapshot) => {
                 messagesBox.innerHTML = '';
                 if (snapshot.empty) {
-                    messagesBox.innerHTML = `<div style="text-align:center; opacity:0.5; margin-top:50px;">NO_PREVIOUS_LOGS...</div>`;
+                    messagesBox.innerHTML = `<div style="text-align:center; opacity:0.4; margin-top:40px; font-size:12px;">SECURE_LOGS_EMPTY</div>`;
                     return;
                 }
                 snapshot.forEach((doc) => {
