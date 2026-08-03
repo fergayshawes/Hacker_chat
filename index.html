@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دردشة الأرقام التعريفية</title>
+    <!-- استيراد خطوط وتصميم أنيق -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            position: relative;
+        }
+
+        /* شاشات التطبيق */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1e293b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* أزرار وتصاميم النماذج */
+        h2 {
+            margin-bottom: 20px;
+            color: #38bdf8;
+        }
+
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .google-btn {
+            background: #ffffff;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .google-btn:hover {
+            background: #f1f5f9;
+        }
+
+        input {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+
+        /* تخطيط الشات الرئيسي */
+        .chat-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 35%;
+            border-left: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            background: #1e293b;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .search-box input {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .users-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            padding: 15px;
+            border-bottom: 1px solid #334155/50;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .user-item:hover, .user-item.active {
+            background: #334155;
+        }
+
+        .user-item h4 {
+            font-size: 15px;
+            color: #f8fafc;
+        }
+
+        .user-item span {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .chat-area {
+            flex: 65%;
+            display: flex;
+            flex-direction: column;
+            background: #0f172a;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            font-weight: 600;
+        }
+
+        .messages-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.sent {
+            background: #3b82f6;
+            color: white;
+            align-self: flex-start; /* في الـ RTL تظهر يميناً */
+        }
+
+        .message.received {
+            background: #334155;
+            color: #f8fafc;
+            align-self: flex-end; /* في الـ RTL تظهر يساراً */
+        }
+
+        .chat-input-box {
+            padding: 15px;
+            background: #1e293b;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-box input {
+            margin-bottom: 0;
+        }
+
+        .error-text {
+            color: #f87171;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1. شاشة تسجيل الدخول -->
+        <div id="loginScreen" class="screen">
+            <h2>تسجيل الدخول</h2>
+            <button class="btn google-btn" onclick="loginWithGoogle()">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.2v3.15C3.21 21.34 7.27 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.5-.38-2.24s.13-1.52.38-2.24V6.6H1.2C.43 8.14 0 9.99 0 12s.43 3.86 1.2 5.4l4.07-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.27 0 3.21 2.66 1.2 6.6l4.07 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                تسجيل الدخول بواسطة جوجل
+            </button>
+        </div>
+
+        <!-- 2. شاشة إكمال الملف الشخصي (تظهر لأول مرة) -->
+        <div id="profileScreen" class="screen hidden">
+            <h2>أكمل ملفك الشخصي</h2>
+            <div id="profileError" class="error-text"></div>
+            <input type="text" id="fullName" placeholder="الاسم الكامل">
+            <input type="text" id="username" placeholder="اسم المستخدم (Username)">
+            <input type="text" id="uniqueId" placeholder="الرقم التعريفي (4 أرقام فقط)" maxlength="4">
+            <button class="btn" onclick="saveProfile()">حفظ والبدء</button>
+        </div>
+
+        <!-- 3. الشاشة الرئيسية للدردشة -->
+        <div id="mainScreen" class="screen hidden" style="padding: 0;">
+            <div class="chat-layout">
+                <!-- الشريط الجانبي والبحث -->
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h4 id="myProfileDisplay" style="color: #38bdf8;">حسابي</h4>
+                        <div class="search-box">
+                            <input type="text" id="searchIdInput" placeholder="بحث بالرقم التعريفي (4 أرقام)..." oninput="searchUser()">
+                        </div>
+                    </div>
+                    <div class="users-list" id="usersListContainer">
+                        <!-- نتائج البحث أو جهات الاتصال تظهر هنا -->
+                    </div>
+                </div>
+
+                <!-- منطقة المحادثة النصية البحتة -->
+                <div class="chat-area">
+                    <div class="chat-header" id="activeChatHeader">اختر شخصاً للبدء بالمراسلة</div>
+                    <div class="messages-box" id="messagesBox">
+                        <!-- الرسائل تظهر هنا -->
+                    </div>
+                    <div class="chat-input-box" id="chatInputArea" style="display: none;">
+                        <input type="text" id="messageInput" placeholder="اكتب رسالة نصية...">
+                        <button class="btn" onclick="sendMessage()">إرسال</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- سكربتات مكتبات Firebase (SDKs) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addTimestamp, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ضع إعدادات مشروعك هنا
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let userData = null;
+        let activeChatUser = null;
+
+        window.loginWithGoogle = async function() {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("خطأ في تسجيل الدخول", error);
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // التحقق هل سجل بياناته الشخصية ورقم الـ 4 أرقام مسبقاً؟
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    userData = userDoc.data();
+                    showMainScreen();
+                } else {
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('profileScreen').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('profileScreen').classList.add('hidden');
+                document.getElementById('mainScreen').classList.add('hidden');
+            }
+        });
+
+        window.saveProfile = async function() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const uniqueId = document.getElementById('uniqueId').value.trim();
+            const errorDiv = document.getElementById('profileError');
+
+            if (!fullName || !username || !uniqueId) {
+                errorDiv.innerText = "الرجاء تعبئة جميع الحقول";
+                return;
+            }
+
+            if (uniqueId.length !== 4 || isNaN(uniqueId)) {
+                errorDiv.innerText = "الرقم التعريفي يجب أن يكون 4 أرقام فقط";
+                return;
+            }
+
+            // التحقق هل الرقم التعريفي مستخدم من قبل شخص آخر؟
+            const q = query(collection(db, "users"), where("uniqueId", "==", uniqueId));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                errorDiv.innerText = "هذا الرقم التعريفي مستخدم مسبقاً، اختر رقماً آخر";
+                return;
+            }
+
+            // حفظ البيانات
+            userData = {
+                uid: currentUser.uid,
+                fullName,
+                username,
+                uniqueId
+            };
+
+            await setDoc(doc(db, "users", currentUser.uid), userData);
+            showMainScreen();
+        };
+
+        function showMainScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('profileScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+            document.getElementById('myProfileDisplay').innerText = `${userData.fullName} (#${userData.uniqueId})`;
+        }
+
+        // البحث عن شخص بالرقم التعريفي (4 أرقام)
+        window.searchUser = async function() {
+            const queryText = document.getElementById('searchIdInput').value.trim();
+            const listContainer = document.getElementById('usersListContainer');
+            listContainer.innerHTML = '';
+
+            if (queryText.length === 0) return;
+
+            const q = query(collection(db, "users"), where("uniqueId", "==", queryText));
+            const querySnapshot = await getDocs(q);
+
+            querySnapshot.forEach((docSnap) => {
+                const user = docSnap.data();
+                if (user.uid !== currentUser.uid) {
+                    listContainer.innerHTML += `
+                        <div class="user-item" onclick='selectUser(${JSON.stringify(user)})'>
+                            <h4>${user.fullName}</h4>
+                            <span>الرقم: #${user.uniqueId} | @${user.username}</span>
+                        </div>
+                    `;
+                }
+            });
+        };
+
+        window.selectUser = function(user) {
+            activeChatUser = user;
+            document.getElementById('activeChatHeader').innerText = `المحادثة مع: ${user.fullName} (#${user.uniqueId})`;
+            document.getElementById('chatInputArea').style.display = 'flex';
+            loadMessages();
+        };
+
+        // إرسال رسالة نصية فقط
+        window.sendMessage = async function() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (!text || !activeChatUser) return;
+
+            // بناء معرف محادثة فريد بين الشخصين بغض النظر عن من يبدأ
+            const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
+
+            await addDoc(collection(db, "chats", chatId, "messages"), {
+                text: text,
+                senderId: currentUser.uid,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+        };
+
+        // تحميل الرسائل بالوقت الفعلي (Real-time)
+        function loadMessages() {
+            if (!activeChatUser) return;
+            const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
+            const messagesBox = document.getElementById('messagesBox');
+
+            const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+            
+            onSnapshot(q, (snapshot) => {
+                messagesBox.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const msg = doc.data();
+                    const isMe = msg.senderId === currentUser.uid;
+                    messagesBox.innerHTML += `
+                        <div class="message ${isMe ? 'sent' : 'received'}">
+                            ${msg.text}
+                        </div>
+                    `;
+                });
+                messagesBox.scrollTop = messagesBox.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>
