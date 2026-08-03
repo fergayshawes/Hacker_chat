@@ -145,7 +145,7 @@
 
         .user-item {
             padding: 15px;
-            border-bottom: 1px solid #334155/50;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -278,20 +278,21 @@
         </div>
     </div>
 
-    <!-- سكربتات مكتبات Firebase (SDKs) -->
+    <!-- كود المنطق والربط مع فايربيس -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addTimestamp, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ضع إعدادات مشروعك هنا
+        // إعدادات مشروعك الفعلي على فايربيس
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyAcqJlqxeCxehWuBlRsrIpL77ClTOYvgXo",
+            authDomain: "program-73193.firebaseapp.com",
+            projectId: "program-73193",
+            storageBucket: "program-73193.firebasestorage.app",
+            messagingSenderId: "98054437932",
+            appId: "1:98054437932:web:ae2cc80b4eefc14873a589",
+            measurementId: "G-QVXBGN8HQW"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -314,7 +315,6 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // التحقق هل سجل بياناته الشخصية ورقم الـ 4 أرقام مسبقاً؟
                 const userDocRef = doc(db, "users", user.uid);
                 const userDoc = await getDoc(userDocRef);
 
@@ -348,7 +348,6 @@
                 return;
             }
 
-            // التحقق هل الرقم التعريفي مستخدم من قبل شخص آخر؟
             const q = query(collection(db, "users"), where("uniqueId", "==", uniqueId));
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
@@ -356,7 +355,6 @@
                 return;
             }
 
-            // حفظ البيانات
             userData = {
                 uid: currentUser.uid,
                 fullName,
@@ -375,7 +373,6 @@
             document.getElementById('myProfileDisplay').innerText = `${userData.fullName} (#${userData.uniqueId})`;
         }
 
-        // البحث عن شخص بالرقم التعريفي (4 أرقام)
         window.searchUser = async function() {
             const queryText = document.getElementById('searchIdInput').value.trim();
             const listContainer = document.getElementById('usersListContainer');
@@ -406,13 +403,11 @@
             loadMessages();
         };
 
-        // إرسال رسالة نصية فقط
         window.sendMessage = async function() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
             if (!text || !activeChatUser) return;
 
-            // بناء معرف محادثة فريد بين الشخصين بغض النظر عن من يبدأ
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
 
             await addDoc(collection(db, "chats", chatId, "messages"), {
@@ -424,7 +419,6 @@
             input.value = '';
         };
 
-        // تحميل الرسائل بالوقت الفعلي (Real-time)
         function loadMessages() {
             if (!activeChatUser) return;
             const chatId = [currentUser.uid, activeChatUser.uid].sort().join('_');
